@@ -20,8 +20,10 @@ function addTask() {
 
 function toggleTask(id) {
   const task = tasks.find((t) => t.id === id);
-  task.done = true;
-  render();
+  if (task) {
+    task.done = !task.done;
+    render();
+  }
 }
 
 function deleteTask(id) {
