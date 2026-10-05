@@ -24,7 +24,12 @@ function renderProducts() {
     card.innerHTML = `<h3>${p.name}</h3><p>${p.price} ₽</p>`;
     const btn = document.createElement("button");
     btn.textContent = "В корзину";
-    btn.addEventListener("click", addToCart);
+    btn.addEventListener("click", () => {
+      if (cart.some((item) => item.id === p.id)) {
+        return;
+      }
+      addToCart(p.id)
+    });
     card.appendChild(btn);
     productsEl.appendChild(card);
   });
