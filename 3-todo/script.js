@@ -42,7 +42,17 @@ function clearCompleted() {
 }
 
 function getVisibleTasks() {
-  return tasks;
+  const button = document.querySelector('.filter.active');
+  const filterValue = button.dataset.filter;
+
+  let currentFilter = filterValue || "all";
+  let result = [...tasks];
+  if (currentFilter === "active") {
+    result = result.filter((task) => !task.done);
+  } else if (currentFilter === "done") {
+    result = result.filter((task) => task.done);
+  }
+  return result;
 }
 
 function updateCounter() {
@@ -51,7 +61,7 @@ function updateCounter() {
 }
 
 function render() {
-  const visible = getVisibleTasks();
+  let visible = getVisibleTasks();
   list.textContent = "";
   for (let i = 0; i < visible.length; i++) {
     const task = visible[i];
