@@ -56,9 +56,6 @@ function decreaseQty(id) {
     return;
   }
   item.qty--;
-  if (cart.length === 0) {
-    emptyMsg.removeAttribute('hidden');
-  }
   renderCart();
 }
 
@@ -78,7 +75,6 @@ function applyPromo() {
 
 function clearCart() {
   cart = [];
-  emptyMsg.removeAttribute('hidden');
   renderCart();
 }
 
@@ -109,9 +105,7 @@ function renderCart() {
 
   badgeEl.textContent = totalQty;
   totalEl.textContent = total;
-  if (totalQty !== 0) {
-    emptyMsg.hidden = true;
-  }
+  emptyMsg.hidden = cart.length > 0;
 
 }
 
