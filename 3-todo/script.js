@@ -11,8 +11,13 @@ let currentFilter = "all";
 let nextId = 1;
 
 function addTask() {
-  const text = input.value;
+  const text = input.value.trim();
   errorEl.hidden = true;
+  if (text === '') {
+    errorEl.hidden = false;
+    errorEl.textContent = 'Введите текст задачи';
+    return;
+  }
   tasks.push({ id: nextId++, text: text, done: false });
   input.value = "";
   render();
@@ -20,31 +25,45 @@ function addTask() {
 
 function toggleTask(id) {
   const task = tasks.find((t) => t.id === id);
-  task.done = true;
-  render();
+  if (task) {
+    task.done = !task.done;
+    render();
+  }
 }
 
 function deleteTask(id) {
-  tasks.filter((t) => t.id !== id);
+  tasks = tasks.filter((task) => task.id !== id);
   render();
 }
 
 function clearCompleted() {
-  tasks = [];
+  tasks = tasks.filter((task) => !task.done);
   render();
 }
 
 function getVisibleTasks() {
-  return tasks;
+  const button = document.querySelector('.filter.active');
+  const filterValue = button.dataset.filter;
+
+  let currentFilter = filterValue || "all";
+  let result = [...tasks];
+  if (currentFilter === "active") {
+    result = result.filter((task) => !task.done);
+  } else if (currentFilter === "done") {
+    result = result.filter((task) => task.done);
+  }
+  return result;
 }
 
 function updateCounter() {
-  counter.textContent = "Активных задач: " + tasks.length;
+  const activeTasks = tasks.filter((task) => !task.done).length;
+  counter.textContent = "Активных задач: " + activeTasks;
 }
 
 function render() {
-  const visible = getVisibleTasks();
-  for (let i = 1; i <= visible.length; i++) {
+  let visible = getVisibleTasks();
+  list.textContent = "";
+  for (let i = 0; i < visible.length; i++) {
     const task = visible[i];
     const li = document.createElement("li");
     li.className = "task";
@@ -69,7 +88,7 @@ function render() {
   updateCounter();
 }
 
-addBtn.addEventListener("dblclick", addTask);
+addBtn.addEventListener("click", addTask);
 clearBtn.addEventListener("click", clearCompleted);
 
 filterButtons.forEach((btn) => {
