@@ -25,10 +25,7 @@ function renderProducts() {
     const btn = document.createElement("button");
     btn.textContent = "В корзину";
     btn.addEventListener("click", () => {
-      if (cart.some((item) => item.id === p.id)) {
-        return;
-      }
-      addToCart(p.id)
+      addToCart(p.id);
     });
     card.appendChild(btn);
     productsEl.appendChild(card);
@@ -36,11 +33,14 @@ function renderProducts() {
 }
 
 function addToCart(id) {
-  const product = products.find((p) => p.id === id);
-  if (!product) {
-    return;
+  const existing = cart.find((item) => item.id === id);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    const product = products.find((p) => p.id === id);
+    if (!product) return;
+    cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
   }
-  cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
   renderCart();
 }
 
